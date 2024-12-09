@@ -16,7 +16,6 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml' # use the file prometheus.yml
       - '--web.enable-lifecycle'                       # control access on the UI like: refresh configuration and other services
       - '--web.config.file=/etc/prometheus/web.yml'    # this for user and password to login UI
-      - '--web.read-timeout=5m'
     dns:
       - 10.0.0.200
       - 8.8.8.8
