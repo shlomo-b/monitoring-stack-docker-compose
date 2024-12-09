@@ -1,0 +1,165 @@
+version: '2'
+
+# run promethes on container
+services:
+  prometheus:
+    image: bitnami/prometheus
+    container_name: prometheus
+    volumes:
+      - prometheus-data:/var/lib/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml  # map prometheus.yml to the container
+      - ./web.yml:/etc/prometheus/web.yml                # map web.yml to the container
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml' # use the file prometheus.yml
+      - '--web.enable-lifecycle'                       # control access on the UI like: refresh configuration and other services
+      - '--web.config.file=/etc/prometheus/web.yml'    # this for user and password to login UI
+      - '--web.read-timeout=5m'
+    dns:
+      - 10.0.0.200
+      - 8.8.8.8
+    networks:
+      - new-network  # using the new custom network
+
+  # run grafana on container
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - '3000:3000'
+    volumes:
+     - grafana-storage:/var/lib/grafana
+    dns:
+      - 10.0.0.200
+    networks:
+      - new-network  # using the new custom network
+
+  # run blackjack on container
+  blackjack:
+    image: shlomobarzili/blackjack:latest
+    container_name: Blackjack
+    ports:
+      - "9792:80"
+    restart: unless-stopped
+    # network_mode: bridge
+    dns:
+      - 10.0.0.200
+      - 8.8.8.8
+    networks:
+      - new-network  # using the new custom network
+
+  # run node-exporter on container
+  node-exporter:
+    image: prom/node-exporter
+    container_name: node-exporter
+    restart: unless-stopped
+    ports:
+      - 9100:9100
+  #  network_mode: bridge  # using the default network
+    dns:
+      - 10.0.0.200
+      - 8.8.8.8
+    networks:
+      - new-network  # using the new custom network
+
+  # run cadvisor on container
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.39.3
+    privileged: true
+    container_name: cadvisor
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/snap/docker:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      - /cgroup:/cgroup:ro
+    # network_mode: bridge  # using the default network
+    dns:
+      - 10.0.0.200
+      - 8.8.8.8
+    networks:
+      - new-network  # using the new custom network
+
+  # run uptime-kuma on container
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - '3001:3001'
+    volumes:
+      - uptime-kuma-storage:/app/data
+    # network_mode: bridge  # using the default network
+    dns:
+      - 10.0.0.200
+      - 8.8.8.8
+    networks:
+      - new-network  # using the new custom network
+
+  loki:
+    image: grafana/loki:latest
+    user: root
+    container_name: loki-logs
+    restart: unless-stopped
+    ports:
+      - 3100:3100 
+    # network_mode: bridge
+    volumes:
+      - loki-storage:/loki-data
+      - ./loki-config.yaml:/etc/loki/loki-config.yaml
+    command: -config.file=/etc/loki/loki-config.yaml 
+    networks:
+      - new-network  # using the new custom network
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+   # user: root
+    restart: unless-stopped
+    # network_mode: bridge 
+    volumes:
+      - promtail-storage:/promtail-data
+      - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/log:/var/log
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    command: -config.file=/etc/promtail/promtail-config.yaml  
+    networks:
+      - new-network  # using the new custom network
+    depends_on:
+      - loki
+
+# volumes for grafana + promethus + uptime-kuma 
+volumes:
+  prometheus-data:
+    name: grafanaprometheus_prometheus-data
+  grafana-storage:
+    name: grafanaprometheus_grafana-storage
+  uptime-kuma-storage:
+    name: grafanaprometheus_uptime-kuma-storage
+  loki-storage:
+    name: grafanaprometheus_loki-storage
+  promtail-storage:
+    name: grafanaprometheus_promtail-storage
+
+# This tells Docker to use an external network called "new-network"
+networks:
+  new-network:
+    ipam:
+      config:
+        - subnet: 192.169.0.0/16
+          gateway: 192.169.0.254
