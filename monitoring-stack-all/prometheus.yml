@@ -6,6 +6,11 @@ global:
   external_labels:
     monitor: 'Monitoring'
 
+alerting:
+  alertmanagers:
+    - scheme: http
+      static_configs:
+        - targets: [ '10.90.100.251:9093' ]    
 
 scrape_configs:
   - job_name: 'prometheus'
@@ -13,8 +18,8 @@ scrape_configs:
       - targets: ['10.90.100.251:9090']
     metrics_path: "/metrics"  
     basic_auth:
-      username_file: "/etc/prometheus/prometheus_username.txt" # my username
-      password_file: "/etc/prometheus/prometheus_password.txt" # my passwrod
+      username_file: "/etc/prometheus/prometheus_username.txt" # my username from folder secrets
+      password_file: "/etc/prometheus/prometheus_password.txt" # my passwrod from folder secrets
 
   - job_name: 'grafana'
     metrics_path: "/metrics"
