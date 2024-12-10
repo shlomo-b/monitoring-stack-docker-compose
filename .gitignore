@@ -1,5 +1,5 @@
 # ignore file web.yml
-./web.yml
+web.yml
 
 # ignore folder secrets
-./secrets
+secrets
