@@ -8,7 +8,9 @@ services:
     volumes:
       - prometheus-data:/var/lib/prometheus
       - ./prometheus.yml:/etc/prometheus/prometheus.yml  # map prometheus.yml to the container
-      - ./web.yml:/etc/prometheus/web.yml                # map web.yml to the container
+      - ./web.yml:/etc/prometheus/web.yml               # map web.yml to the container
+      - ./secrets/prometheus_username.txt:/etc/prometheus/prometheus_username.txt  # mount the username
+      - ./secrets/prometheus_password.txt:/etc/prometheus/prometheus_password.txt
     ports:
       - 9090:9090
     restart: unless-stopped

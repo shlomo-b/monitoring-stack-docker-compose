@@ -13,8 +13,8 @@ scrape_configs:
       - targets: ['10.90.100.251:9090']
     metrics_path: "/metrics"  
     basic_auth:
-      username: admin  # my username
-      password: NwoA6#k%2K*X#R#  # my passwrod 
+      username_file: "/etc/prometheus/prometheus_username.txt" # my username
+      password_file: "/etc/prometheus/prometheus_password.txt" # my passwrod
 
   - job_name: 'grafana'
     metrics_path: "/metrics"
