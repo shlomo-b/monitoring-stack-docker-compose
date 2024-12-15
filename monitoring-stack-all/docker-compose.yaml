@@ -137,7 +137,7 @@ services:
     networks:
       - new-network  # using the new custom network
 
-# volumes for grafana + promethus + uptime-kuma 
+# volumes for containers
 volumes:
   prometheus-data:
     name: grafanaprometheus_prometheus-data
