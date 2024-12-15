@@ -18,9 +18,6 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml' # use the file prometheus.yml
       - '--web.enable-lifecycle'                       # control access on the UI like: refresh configuration and other services
       - '--web.config.file=/etc/prometheus/web.yml'    # this for user and password to login UI
-    dns:
-      - 10.0.0.200
-      - 8.8.8.8
     networks:
       - new-network  # using the new custom network
 
@@ -36,8 +33,6 @@ services:
       - '3000:3000'
     volumes:
      - grafana-storage:/var/lib/grafana
-    dns:
-      - 10.0.0.200
     networks:
       - new-network  # using the new custom network
 
@@ -48,10 +43,6 @@ services:
     ports:
       - "9792:80"
     restart: unless-stopped
-    # network_mode: bridge
-    dns:
-      - 10.0.0.200
-      - 8.8.8.8
     networks:
       - new-network  # using the new custom network
 
@@ -62,10 +53,6 @@ services:
     restart: unless-stopped
     ports:
       - 9100:9100
-  #  network_mode: bridge  # using the default network
-    dns:
-      - 10.0.0.200
-      - 8.8.8.8
     networks:
       - new-network  # using the new custom network
 
@@ -85,10 +72,6 @@ services:
       - /var/snap/docker:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
       - /cgroup:/cgroup:ro
-    # network_mode: bridge  # using the default network
-    dns:
-      - 10.0.0.200
-      - 8.8.8.8
     networks:
       - new-network  # using the new custom network
 
@@ -104,10 +87,6 @@ services:
       - '3001:3001'
     volumes:
       - uptime-kuma-storage:/app/data
-    # network_mode: bridge  # using the default network
-    dns:
-      - 10.0.0.200
-      - 8.8.8.8
     networks:
       - new-network  # using the new custom network
 
@@ -118,7 +97,6 @@ services:
     restart: unless-stopped
     ports:
       - 3100:3100 
-    # network_mode: bridge
     volumes:
       - loki-storage:/loki-data
       - ./loki-config.yaml:/etc/loki/loki-config.yaml
@@ -131,7 +109,6 @@ services:
     container_name: promtail
    # user: root
     restart: unless-stopped
-    # network_mode: bridge 
     volumes:
       - promtail-storage:/promtail-data
       - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
@@ -172,7 +149,7 @@ volumes:
     name: grafanaprometheus_loki-storage
   promtail-storage:
     name: grafanaprometheus_promtail-storage
-  alertmanager-storage: {} 
+  alertmanager-storage: {}
 
 # This tells Docker to use an external network called "new-network"
 networks:

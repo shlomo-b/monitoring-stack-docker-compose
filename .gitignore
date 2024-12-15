@@ -3,3 +3,5 @@ web.yml
 
 # ignore folder secrets
 secrets
+
+alertmanager.yml
