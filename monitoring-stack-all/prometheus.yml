@@ -10,12 +10,12 @@ alerting:
   alertmanagers:
     - scheme: http
       static_configs:
-        - targets: [ '10.90.100.251:9093' ]    
+        - targets: ['alertmanager:9093']    
 
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['10.90.100.251:9090']
+      - targets: ['prometheus:9090']
     metrics_path: "/metrics"  
     basic_auth:
       username_file: "/etc/prometheus/prometheus_username.txt" # my username from folder secrets
@@ -24,21 +24,29 @@ scrape_configs:
   - job_name: 'grafana'
     metrics_path: "/metrics"
     static_configs:
-      - targets: ['10.90.100.251:3000']
+      - targets: ['grafana:3000']
 
 # the node-exporter show the state of the system environment like: [cpu,memory)
 
   - job_name: 'node-exporter'
     metrics_path: "/metrics"
     static_configs:
-      - targets: ['10.90.100.251:9100']
+      - targets: ['node-exporter:9100']
 
 # show the all the containers that runining on the system environment and send all the metricks to promethus
 
   - job_name: 'cAdvisor'
     metrics_path: "/metrics"
     static_configs:
-      - targets: ['10.90.100.251:8080']
+      - targets: ['cadvisor:8080']
+
+  - job_name: "loki"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["loki:3100"]      
+
+
+#---------------outside the network----------------#
 
   - job_name: 'blackjack.spider-shlomo.com'
     metrics_path: "/metrics"
@@ -50,11 +58,6 @@ scrape_configs:
     metrics_path: "/metrics"
     static_configs:
       - targets: ['10.0.11.10:8090']
-
-  - job_name: "loki"
-    metrics_path: "/metrics"
-    static_configs:
-      - targets: ["10.90.100.251:3100"]  
 
   - job_name: "shlomo-pc"
     metrics_path: "/metrics"
