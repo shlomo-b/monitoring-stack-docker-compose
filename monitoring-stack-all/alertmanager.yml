@@ -9,6 +9,6 @@ receivers:
     email_configs:
       - smarthost: 'smtp.gmail.com:465'
         auth_username: 'Pythonprtgs@gmail.com'
-        auth_password_file: '/etc/alertmanager/alertmanager_password.txt'
+        auth_password_file: '/etc/alertmanager/alertmanager_token.txt'
         from: 'Pythonprtgs@gmail.com'
         to: 'Pythonprtgs@gmail.com'
