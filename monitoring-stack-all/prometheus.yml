@@ -40,13 +40,11 @@ scrape_configs:
     static_configs:
       - targets: ['10.90.100.251:8080']
 
-
   - job_name: 'blackjack.spider-shlomo.com'
     metrics_path: "/metrics"
     static_configs:
       - targets: ['blackjack.spider-shlomo.com:443']
     scheme: https
-
 
   - job_name: 'blackjack_locali'
     metrics_path: "/metrics"
@@ -54,16 +52,16 @@ scrape_configs:
       - targets: ['10.0.11.10:8090']
 
   - job_name: "loki"
-    metrics_path: "/metrics"  # Loki's metrics endpoint
+    metrics_path: "/metrics"
     static_configs:
-      - targets: ["10.90.100.251:3100"]  # Replace with your Loki's address and port   
+      - targets: ["10.90.100.251:3100"]  
 
   - job_name: "shlomo-pc"
-    metrics_path: "/metrics"  # Loki's metrics endpoint
+    metrics_path: "/metrics"
     static_configs:
-      - targets: ["10.0.11.250:9182"]  # Replace with your Loki's address and port         
+      - targets: ["10.0.11.250:9182"]   
   
   - job_name: "pods blackjack in eks"
-    metrics_path: "/metrics"  # Loki's metrics endpoint
+    metrics_path: "/metrics"
     static_configs:
-      - targets: ["node-exporter.spider-shlomo.com:30910"]  # Replace with your Loki's address and port
+      - targets: ["node-exporter.spider-shlomo.com:30910"]
