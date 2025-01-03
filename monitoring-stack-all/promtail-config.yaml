@@ -17,6 +17,15 @@ scrape_configs:
           job: varlogs
           __path__: /var/log/*log
 
+
+  - job_name: system_auth
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: system_auth
+          __path__: /var/log/auth.log      
+
   - job_name: docker
     static_configs:
       - targets:
