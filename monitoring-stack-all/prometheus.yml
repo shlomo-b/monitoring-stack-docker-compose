@@ -73,7 +73,13 @@ scrape_configs:
     static_configs:
       - targets: ["node-exporter.spider-shlomo.com:30910"]
 
-  - job_name: 'react-shop-backend'
+  - job_name: 'react-shop-backend-minikube'
     metrics_path: "/metrics"
     static_configs:
       - targets: ['192.168.49.2:30056']
+
+  - job_name: 'backend.spider-shlomo.com'
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ['backend.spider-shlomo.com:443']
+    scheme: https
